@@ -8,7 +8,7 @@
     <Copyright>(c) 2021 - 2022 eyeV GmbH</Copyright>
     <Company>eyeV GmbH</Company>
     <Authors>Mathias Anhalt, Konstantin Wachendorff</Authors>
-    <Description>Skyle eyetracker API following .NET standard 2.1, based on gRPC</Description>
+    <Description>Skyle eyetracker API following .NET6.0, based on gRPC</Description>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageProjectUrl>https://eyev.de</PackageProjectUrl>
     <RepositoryUrl>https://github.com/eyev-de/SkyleAPI.NET</RepositoryUrl>
