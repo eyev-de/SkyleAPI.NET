@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0</Version>
+    <Version>2.0-pre</Version>
     <Copyright>(c) 2021 - 2022 eyeV GmbH</Copyright>
     <Company>eyeV GmbH</Company>
     <Authors>Mathias Anhalt, Konstantin Wachendorff</Authors>
