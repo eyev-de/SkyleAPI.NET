@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>1.0</Version>
-    <Copyright>(c) 2021 eyeV GmbH</Copyright>
+    <Copyright>(c) 2021 - 2022 eyeV GmbH</Copyright>
     <Company>eyeV GmbH</Company>
     <Authors>Mathias Anhalt, Konstantin Wachendorff</Authors>
     <Description>Skyle eyetracker API following .NET standard 2.1, based on gRPC</Description>
@@ -23,17 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.17.2" />
-    <PackageReference Include="Grpc" Version="2.36.4" />
-    <PackageReference Include="Grpc.Core" Version="2.36.4" />
-    <PackageReference Include="Grpc.Tools" Version="2.36.4">
+    <PackageReference Include="Google.Protobuf" Version="3.19.3" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.42.0-pre1" />
+    <PackageReference Include="Grpc.Tools" Version="2.43.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NLog" Version="4.7.10" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="NLog" Version="4.7.13" />
     <Protobuf Include="protos\Skyle.proto\Skyle.proto" GrpcServices="Client" Access="Internal" />
   </ItemGroup>
 

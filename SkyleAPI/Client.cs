@@ -1,10 +1,11 @@
-﻿using Grpc.Core;
-using Skyle_Server;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Grpc.Core;
+using Grpc.Net.Client;
+using Skyle_Server;
 
 namespace Skyle
 {
@@ -13,7 +14,7 @@ namespace Skyle
     /// </summary>
     public class Client : IDisposable
     {
-        private Channel channel;
+        private GrpcChannel channel;
         private Skyle_Server.Skyle.SkyleClient client;
         private Options currentOptions = new Options();
         private CalibControl calibControl = new CalibControl();
@@ -45,7 +46,6 @@ namespace Skyle
         /// <param name="host"></param>
         public Client(string host = "skyle.local")
         {
-            Environment.SetEnvironmentVariable("GRPC_DNS_RESOLVER", "native");
             this.host = host;
             _connected += Client_connected;
         }
@@ -58,10 +58,15 @@ namespace Skyle
         {
             try
             {
-                channel = new Channel(host, 50052, ChannelCredentials.Insecure);
+
+                channel = GrpcChannel.ForAddress("http://" + host + ":50052", new GrpcChannelOptions
+                {
+                    Credentials = ChannelCredentials.Insecure
+                });
                 client = new Skyle_Server.Skyle.SkyleClient(channel);
                 createConnectionTask();
-                await channel.ConnectAsync(DateTime.Now.ToUniversalTime().AddSeconds(timeoutinseconds));
+                CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutinseconds));
+                await channel.ConnectAsync(cts.Token);
                 return true;
             }
             catch (TaskCanceledException)
@@ -86,10 +91,10 @@ namespace Skyle
                     {
                         while (true)
                         {
-                            ChannelState beforeState = channel.State;
-                            await channel.TryWaitForStateChangedAsync(beforeState);
+                            ConnectivityState beforeState = channel.State;
+                            await channel.WaitForStateChangedAsync(beforeState);
                             //if (beforeState != ChannelState.Ready && channel.State != ChannelState.Idle)
-                            _connected?.Invoke(channel.State == ChannelState.Ready);
+                            _connected?.Invoke(channel.State == ConnectivityState.Ready);
                         }
                     }
                     catch (Exception ex)
@@ -350,7 +355,8 @@ namespace Skyle
             try
             {
                 if (client == null) ConnectAsync().Wait();
-                return channel.State == ChannelState.Ready;
+                var a = GetVersions();
+                return channel.State == ConnectivityState.Ready;
             }
             catch (Exception)
             {

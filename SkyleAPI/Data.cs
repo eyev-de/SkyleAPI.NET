@@ -91,9 +91,13 @@ namespace Skyle
     {
         Unknown = 0,
         /// <summary>
-        /// Device for general usage with SDK (no HID movement)
+        /// Device for general usage with SDK or Windows (no HID movement)
         /// </summary>
         General = 1,
+        /// <summary>
+        /// Device for usage with iPad Pro 13, second version
+        /// </summary>
+        iPadProV2 = 2,
         /// <summary>
         /// Device for usage with iPad Pro 13
         /// </summary>

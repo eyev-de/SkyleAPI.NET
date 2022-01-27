@@ -1,5 +1,4 @@
 using Grpc.Core;
-using Skyle_Server;
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -32,10 +31,8 @@ namespace APITest
             Client c = new Client("localhost");
             bool con = await c.ConnectAsync();
             Assert.True(con && c.Available());
-            //StopServer();
             await server.KillAsync();
             Assert.False(c.Available());
-            //StopServer();
         }
 
         [Fact]
