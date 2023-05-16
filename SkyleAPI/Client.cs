@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Grpc.Core;
@@ -31,6 +32,7 @@ namespace Skyle
         private CancellationTokenSource conCTS = new CancellationTokenSource();
         private AsyncServerStreamingCall<TriggerMessage> triggerStream;
         private readonly string host;
+        private readonly int port;
         private event Action<Point> _gaze;
         private event Action<Positioning> _positioning;
         private event Action<Trigger> _triggered;
@@ -44,9 +46,10 @@ namespace Skyle
         /// Ctor with hostname (default skyle.local)
         /// </summary>
         /// <param name="host"></param>
-        public Client(string host = "skyle.local")
+        public Client(string host = "skyle.local", int port = 50051)
         {
             this.host = host;
+            this.port = port;
             _connected += Client_connected;
         }
 
@@ -59,7 +62,7 @@ namespace Skyle
             try
             {
 
-                channel = GrpcChannel.ForAddress("http://" + host + ":50052", new GrpcChannelOptions
+                channel = GrpcChannel.ForAddress("http://" + host + ":" + port, new GrpcChannelOptions
                 {
                     Credentials = ChannelCredentials.Insecure
                 });
@@ -367,11 +370,11 @@ namespace Skyle
         /// <summary>
         /// Start a calibration
         /// </summary>
-        /// <param name="fivePoint">Set to true, if 5 point calibration instead of 9 point should be performed</param>
-        public void Calibrate(int screenWidth, int screenHeight, bool fivePoint = false)
+        /// <param name="fivePoint">Set the number of calibration Points. Either 1,2,5 or 9 Point is valid</param>
+        public void Calibrate(int screenWidth, int screenHeight, int NumberOfCalibrationPoints)
         {
             calibControl.Calibrate = true;
-            calibControl.NumberOfPoints = fivePoint ? 5 : 9;
+            calibControl.NumberOfPoints = new int[4] { 1, 2, 5, 9 }.Contains(NumberOfCalibrationPoints) ? NumberOfCalibrationPoints : 9;
             calibControl.StopHID = true;
             calibControl.Res = new ScreenResolution()
             {
